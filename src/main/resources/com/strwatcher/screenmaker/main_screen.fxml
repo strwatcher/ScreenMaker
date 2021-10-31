@@ -80,6 +80,7 @@
                        minorTickCount="1"
                        orientation="VERTICAL"
                        showTickLabels="true"
+                       showTickMarks="true"
                />
 
                <CheckBox fx:id="collapseOptionCheckBox"

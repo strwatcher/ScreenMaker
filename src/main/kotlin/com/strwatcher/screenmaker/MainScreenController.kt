@@ -1,5 +1,6 @@
 package com.strwatcher.screenmaker
 
+import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.scene.image.ImageView
@@ -9,6 +10,10 @@ import javafx.scene.layout.VBox
 import javafx.scene.robot.Robot
 import javafx.stage.Screen
 import javafx.stage.Stage
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainScreenController {
     var stage: Stage? = null
@@ -65,17 +70,28 @@ class MainScreenController {
     private lateinit var screenShotButton: Button
 
 
+    @DelicateCoroutinesApi
     fun onScreenShotButtonClicked() {
-//        if (collapseOptionCheckBox.isSelected) stage?.isIconified = true
+        val duration = durationSlider.value
 
-        val screen = Screen.getPrimary().bounds
-        val img = robot.getScreenCapture(null, screen)
+        val job = GlobalScope.launch {
+            delay(duration.toLong() * 1000L)
 
-        imageView.image = img
-        imageView.fitWidth = screen.width
-        imageView.fitHeight = screen.height
+            Platform.runLater {
+                val screen = Screen.getPrimary().bounds
+                val img = robot.getScreenCapture(null, screen)
 
-//        stage?.isIconified = false
+                imageView.image = img
+                imageView.fitWidth = screen.width
+                imageView.fitHeight = screen.height
+
+                stage?.isIconified = false
+            }
+        }
+
+
+        if (collapseOptionCheckBox.isSelected) stage?.isIconified = true
+        job.start()
 
     }
 
