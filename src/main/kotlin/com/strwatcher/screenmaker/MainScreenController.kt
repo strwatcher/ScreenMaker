@@ -72,10 +72,10 @@ class MainScreenController {
 
     @DelicateCoroutinesApi
     fun onScreenShotButtonClicked() {
-        val duration = durationSlider.value
+        val duration = durationSlider.value + 0.3
 
         val job = GlobalScope.launch {
-            delay(duration.toLong() * 1000L)
+            delay((duration * 1000).toLong())
 
             Platform.runLater {
                 val screen = Screen.getPrimary().bounds
