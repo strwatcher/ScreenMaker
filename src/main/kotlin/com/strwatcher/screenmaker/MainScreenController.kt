@@ -2,8 +2,11 @@ package com.strwatcher.screenmaker
 
 import javafx.application.Platform
 import javafx.fxml.FXML
+import javafx.geometry.Rectangle2D
 import javafx.scene.control.*
 import javafx.scene.image.ImageView
+import javafx.scene.image.WritableImage
+import javafx.scene.image.WritablePixelFormat
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
@@ -79,11 +82,16 @@ class MainScreenController {
 
             Platform.runLater {
                 val screen = Screen.getPrimary().bounds
-                val img = robot.getScreenCapture(null, screen)
+                val fullScreenshot = robot.getScreenCapture(null, screen)
+                val screenshotRect = ScreenshotAreaSelector().start(fullScreenshot)
 
-                imageView.image = img
-                imageView.fitWidth = screen.width
-                imageView.fitHeight = screen.height
+                val screenshot = cropImage(fullScreenshot, screenshotRect)
+
+                imageView.image = screenshot
+                imageView.fitWidth = screenshot.width
+                imageView.fitHeight = screenshot.height
+                imageContainer.prefWidthProperty().bind(imageView.fitWidthProperty())
+                imageContainer.prefHeightProperty().bind(imageView.fitHeightProperty())
 
                 stage?.isIconified = false
             }
@@ -93,6 +101,29 @@ class MainScreenController {
         if (collapseOptionCheckBox.isSelected) stage?.isIconified = true
         job.start()
 
+    }
+
+    private fun cropImage(image: WritableImage, newImageRect: Rectangle2D): WritableImage {
+        val croppedImage = WritableImage(newImageRect.width.toInt(), newImageRect.height.toInt())
+
+        val reader = image.pixelReader
+        val writer = croppedImage.pixelWriter
+        val buffer = ByteArray(newImageRect.width.toInt() * newImageRect.height.toInt() * 4)
+        val format = WritablePixelFormat.getByteBgraInstance()
+
+        reader.getPixels(
+            newImageRect.minX.toInt(), newImageRect.minY.toInt(),
+            newImageRect.width.toInt(), newImageRect.height.toInt(),
+            format, buffer, 0, newImageRect.width.toInt() * 4
+        )
+
+        writer.setPixels(
+            0, 0,
+            newImageRect.width.toInt(), newImageRect.height.toInt(),
+            format, buffer, 0, newImageRect.width.toInt() * 4
+        )
+
+        return croppedImage
     }
 
 
