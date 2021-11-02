@@ -12,6 +12,7 @@ module com.strwatcher.screen_maker.screenmaker {
     requires eu.hansolo.tilesfx;
     requires java.desktop;
     requires kotlinx.coroutines.core.jvm;
+    requires javafx.swing;
 
     opens com.strwatcher.screenmaker to javafx.fxml;
     exports com.strwatcher.screenmaker;

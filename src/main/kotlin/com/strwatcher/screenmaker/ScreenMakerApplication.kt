@@ -20,9 +20,6 @@ class ScreenMakerApplication : Application() {
 
         stage.show()
     }
-
-
-
 }
 
 fun main() {

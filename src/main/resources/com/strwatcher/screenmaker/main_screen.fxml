@@ -10,14 +10,12 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.canvas.Canvas?>
-<BorderPane fx:id="borderPaneMain"
-            maxHeight="-Infinity"
+<BorderPane maxHeight="-Infinity"
             maxWidth="-Infinity"
             minHeight="-Infinity"
             minWidth="-Infinity"
@@ -32,11 +30,6 @@
                    BorderPane.alignment="CENTER"
        >
            <StackPane fx:id="imageContainer">
-               <ImageView fx:id="imageView"
-                          pickOnBounds="true"
-                          preserveRatio="true"
-                          StackPane.alignment="CENTER"
-               />
                <Canvas fx:id="canvas"/>
            </StackPane>
 
@@ -44,13 +37,10 @@
    </center>
 
    <top>
-       <MenuBar fx:id="menuBar"
-               BorderPane.alignment="CENTER"
-       >
+       <MenuBar BorderPane.alignment="CENTER">
 
-           <Menu fx:id="menuFile"
-                   mnemonicParsing="false"
-                   text="File"
+           <Menu mnemonicParsing="false"
+                 text="File"
            >
                <MenuItem fx:id="miOpen" mnemonicParsing="false" text="Open"/>
                <MenuItem fx:id="miSave" mnemonicParsing="false" text="Save"/>
@@ -62,13 +52,11 @@
    </top>
 
    <left>
-       <ScrollPane fx:id="toolsScrollPane"
-                   fitToWidth="true"
+       <ScrollPane fitToWidth="true"
                    BorderPane.alignment="CENTER"
        >
 
-           <VBox fx:id="vboxTools"
-                 alignment="CENTER_LEFT"
+           <VBox alignment="CENTER_LEFT"
                  spacing="40.0"
            >
                <padding>
@@ -90,7 +78,6 @@
                />
 
                <Button fx:id="screenShotButton"
-                       onAction="#onScreenShotButtonClicked"
                        contentDisplay="CENTER"
                        mnemonicParsing="false"
                        text="Сделать скриншот"
