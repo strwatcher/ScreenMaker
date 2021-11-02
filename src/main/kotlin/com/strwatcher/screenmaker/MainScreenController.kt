@@ -1,16 +1,23 @@
 package com.strwatcher.screenmaker
 
 import javafx.application.Platform
+import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.geometry.Rectangle2D
+import javafx.scene.canvas.Canvas
+import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.*
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.scene.image.WritablePixelFormat
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.robot.Robot
+import javafx.scene.shape.ArcType
+import javafx.scene.shape.StrokeLineCap
+import javafx.scene.shape.StrokeLineJoin
 import javafx.stage.Screen
 import javafx.stage.Stage
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -19,8 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainScreenController {
-    var stage: Stage? = null
-    private val robot = Robot()
+
     @FXML
     private lateinit var borderPaneMain: BorderPane
 
@@ -61,6 +67,12 @@ class MainScreenController {
     private lateinit var eraseCheckBox: CheckBox
 
     @FXML
+    private lateinit var screenShotButton: Button
+
+    @FXML
+    private lateinit var brushSizeSlider: Slider
+
+    @FXML
     private lateinit var scrollImageContainer: ScrollPane
 
     @FXML
@@ -70,7 +82,55 @@ class MainScreenController {
     private lateinit var imageView: ImageView
 
     @FXML
-    private lateinit var screenShotButton: Button
+    private lateinit var canvas: Canvas
+
+
+    var stage: Stage? = null
+    private val robot = Robot()
+    private lateinit var graphicsContext: GraphicsContext
+
+    private val brushSize get() = brushSizeSlider.value
+
+    private val drawHandler = EventHandler {
+        event: MouseEvent ->
+        graphicsContext.fill = colorPicker.value
+        val x = event.x - brushSize / 2
+        val y = event.y - brushSize / 2
+
+        graphicsContext.fillArc(x, y, brushSize, brushSize, 0.0, 360.0, ArcType.OPEN)
+    }
+
+    private val eraseHandler = EventHandler {
+        event: MouseEvent ->
+
+        val x = event.x - brushSize / 2
+        val y = event.y - brushSize / 2
+
+        graphicsContext.clearRect(x, y, brushSize, brushSize)
+    }
+
+    fun initialize() {
+        graphicsContext = canvas.graphicsContext2D
+
+        graphicsContext.fill = colorPicker.value
+        graphicsContext.lineJoin = StrokeLineJoin.ROUND
+        graphicsContext.lineCap = StrokeLineCap.ROUND
+
+        canvas.onMouseDragged = drawHandler
+        canvas.onMouseClicked = drawHandler
+
+        eraseCheckBox.onAction = EventHandler {
+            if (eraseCheckBox.isSelected) {
+                canvas.onMouseClicked = eraseHandler
+                canvas.onMouseDragged = eraseHandler
+            }
+            else {
+                canvas.onMouseClicked = drawHandler
+                canvas.onMouseDragged = drawHandler
+            }
+        }
+    }
+
 
 
     @DelicateCoroutinesApi
@@ -90,8 +150,10 @@ class MainScreenController {
                 imageView.image = screenshot
                 imageView.fitWidth = screenshot.width
                 imageView.fitHeight = screenshot.height
-                imageContainer.prefWidthProperty().bind(imageView.fitWidthProperty())
-                imageContainer.prefHeightProperty().bind(imageView.fitHeightProperty())
+                imageContainer.prefWidthProperty().bind(scrollImageContainer.widthProperty())
+                imageContainer.prefHeightProperty().bind(scrollImageContainer.heightProperty())
+                canvas.widthProperty().bind(imageView.fitWidthProperty())
+                canvas.heightProperty().bind(imageView.fitHeightProperty())
 
                 stage?.isIconified = false
             }
