@@ -18,6 +18,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainScreenController {
 
@@ -121,6 +122,7 @@ class MainScreenController {
 
 
     var stage: Stage? = null
+    var appProperties: Properties? = null
 
     @DelicateCoroutinesApi
     fun initialize() {
@@ -144,11 +146,11 @@ class MainScreenController {
     }
 
     fun save() {
-        canvas.getBufferedSnapshot().fastSave()
+        canvas.getBufferedSnapshot().fastSave(appProperties!!)
     }
 
     fun saveAs() {
-        canvas.getBufferedSnapshot().saveAs(stage!!)
+        canvas.getBufferedSnapshot().saveAs(stage!!, appProperties!!)
     }
 
     fun open() {
