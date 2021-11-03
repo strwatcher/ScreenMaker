@@ -16,6 +16,7 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
 <BorderPane maxHeight="-Infinity"
             maxWidth="-Infinity"
             minHeight="-Infinity"
@@ -30,8 +31,11 @@
        <ScrollPane fx:id="scrollImageContainer"
                    BorderPane.alignment="CENTER"
        >
-           <StackPane fx:id="imageContainer">
-               <Canvas fx:id="canvas"/>
+           <StackPane fx:id="imageWrapper">
+               <StackPane fx:id="imageContainer">
+                   <ImageView fx:id="imageView"/>
+                   <Canvas fx:id="canvas"/>
+               </StackPane>
            </StackPane>
 
        </ScrollPane>

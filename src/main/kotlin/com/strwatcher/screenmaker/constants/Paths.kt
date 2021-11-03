@@ -4,7 +4,7 @@ import java.io.File
 
 class Paths {
     companion object {
-        val home = System.getProperty("user.home")
+        val home: String = System.getProperty("user.home")
         val pictures = home + File.separator + "Pictures"
     }
 }

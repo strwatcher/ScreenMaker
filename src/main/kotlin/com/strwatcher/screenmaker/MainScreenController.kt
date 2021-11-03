@@ -8,7 +8,9 @@ import javafx.fxml.FXML
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.*
+import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.scene.robot.Robot
 import javafx.scene.shape.ArcType
@@ -64,6 +66,12 @@ class MainScreenController {
     @FXML
     private lateinit var canvas: Canvas
 
+    @FXML
+    private lateinit var imageView: ImageView
+
+    @FXML
+    private lateinit var imageWrapper: StackPane
+
     private lateinit var graphicsContext: GraphicsContext
 
     private val robot = Robot()
@@ -89,7 +97,7 @@ class MainScreenController {
         graphicsContext.clearRect(x, y, brushSize, brushSize)
     }
 
-    private val drawEraseCheckBoxHandler get() = EventHandler {
+    private val drawEraseCheckBoxHandler = EventHandler {
         _: ActionEvent ->
 
         if (eraseCheckBox.isSelected) {
@@ -110,8 +118,7 @@ class MainScreenController {
             val screenshotRectangle = ScreenshotAreaSelector().start(fullScreenshot)
             val croppedScreenshot = fullScreenshot.crop(screenshotRectangle)
 
-            canvas.setImage(croppedScreenshot, graphicsContext)
-
+            canvas.setImage(croppedScreenshot, graphicsContext, imageView, imageContainer)
             stage?.isIconified = false
         }
     }
@@ -126,8 +133,8 @@ class MainScreenController {
     fun initialize() {
         toolsScrollPane.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
 
-        imageContainer.prefWidthProperty().bind(scrollImageContainer.widthProperty())
-        imageContainer.prefHeightProperty().bind(scrollImageContainer.heightProperty())
+        imageWrapper.prefWidthProperty().bind(scrollImageContainer.widthProperty())
+        imageWrapper.prefHeightProperty().bind(scrollImageContainer.heightProperty())
 
         graphicsContext = canvas.graphicsContext2D
         graphicsContext.fill = colorPicker.value
@@ -146,19 +153,19 @@ class MainScreenController {
     }
 
     fun save() {
-        canvas.getBufferedSnapshot().fastSave(appProperties!!)
+        imageContainer.getBufferedSnapshot().fastSave(appProperties!!)
     }
 
     fun saveAs() {
-        canvas.getBufferedSnapshot().saveAs(stage!!, appProperties!!)
+        imageContainer.getBufferedSnapshot().saveAs(stage!!, appProperties!!)
     }
 
     fun open() {
-        canvas.openImage(stage!!, graphicsContext)
+        canvas.openImage(stage!!, graphicsContext, imageView, imageContainer)
     }
 
     fun close() {
-        canvas.closeImage(graphicsContext)
+        canvas.closeImage(graphicsContext, imageView)
     }
 
     @DelicateCoroutinesApi

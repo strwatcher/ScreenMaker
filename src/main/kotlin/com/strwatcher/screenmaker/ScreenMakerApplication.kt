@@ -95,7 +95,6 @@ class ScreenMakerApplication : Application() {
         scene = Scene(fxmlLoader.load())
         stage.title = "ScreenMaker"
         stage.scene = scene
-
         mainScreenController = fxmlLoader.getController()
         mainScreenController.stage = stage
         bindShortcuts(stage)
