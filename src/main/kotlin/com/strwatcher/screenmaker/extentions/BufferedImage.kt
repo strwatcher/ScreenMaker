@@ -1,7 +1,7 @@
 package com.strwatcher.screenmaker.extentions
 
-import com.strwatcher.screenmaker.Paths
-import com.strwatcher.screenmaker.lastSaveFolder
+import com.strwatcher.screenmaker.constants.Paths
+import com.strwatcher.screenmaker.constants.lastSaveFolder
 import javafx.stage.FileChooser
 import javafx.stage.Stage
 import java.awt.image.BufferedImage

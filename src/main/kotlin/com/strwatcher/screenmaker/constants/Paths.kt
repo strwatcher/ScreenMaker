@@ -1,4 +1,4 @@
-package com.strwatcher.screenmaker
+package com.strwatcher.screenmaker.constants
 
 import java.io.File
 

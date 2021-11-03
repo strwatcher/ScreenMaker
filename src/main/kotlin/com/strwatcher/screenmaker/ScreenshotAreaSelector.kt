@@ -29,18 +29,26 @@ class ScreenshotAreaSelector {
     private val selectedArea = Rectangle(0.0, 0.0)
     private val overlay = Rectangle(0.0, 0.0)
 
-    fun start(image: WritableImage): Rectangle2D{
+    private val onMousePressedHandler = EventHandler {
+            event: MouseEvent ->
+        x1 = event.screenX
+        y1 = event.screenY
+    }
 
-        setupStage()
-        setupOverlay()
-        setupLayout(image)
+    private val onMouseReleasedHandler = EventHandler {
+            event: MouseEvent ->
+        x2 = event.screenX
+        y2 = event.screenY
+        stage.hide()
+    }
 
-        val scene = Scene(layout)
-        stage.scene = scene
+    private val onMouseDraggedHandler = EventHandler {
+            event: MouseEvent ->
+        selectedArea.x = min(x1, event.screenX)
+        selectedArea.y = min(y1, event.screenY)
 
-        stage.showAndWait()
-
-        return calcScreenshotRect()
+        selectedArea.width = (x1 - event.screenX).absoluteValue
+        selectedArea.height = (y1 - event.screenY).absoluteValue
     }
 
     private fun calcScreenshotRect(): Rectangle2D {
@@ -85,25 +93,17 @@ class ScreenshotAreaSelector {
         layout.onMouseDragged = onMouseDraggedHandler
     }
 
-    private val onMousePressedHandler = EventHandler {
-        event: MouseEvent ->
-        x1 = event.screenX
-        y1 = event.screenY
-    }
+    fun start(image: WritableImage): Rectangle2D{
 
-    private val onMouseReleasedHandler = EventHandler {
-        event: MouseEvent ->
-        x2 = event.screenX
-        y2 = event.screenY
-        stage.hide()
-    }
+        setupStage()
+        setupOverlay()
+        setupLayout(image)
 
-    private val onMouseDraggedHandler = EventHandler {
-        event: MouseEvent ->
-        selectedArea.x = min(x1, event.screenX)
-        selectedArea.y = min(y1, event.screenY)
+        val scene = Scene(layout)
+        stage.scene = scene
 
-        selectedArea.width = (x1 - event.screenX).absoluteValue
-        selectedArea.height = (y1 - event.screenY).absoluteValue
+        stage.showAndWait()
+
+        return calcScreenshotRect()
     }
 }
