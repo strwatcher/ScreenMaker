@@ -5,18 +5,22 @@ import javafx.stage.Stage
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.imageio.ImageIO
 import javax.swing.JFileChooser
 
 fun BufferedImage.fastSave() {
+    val picturesDirectory = System.getProperty("user.home") + File.separator + "Pictures"
     val file = File(
-        JFileChooser().fileSystemView.defaultDirectory.toString() +
+        picturesDirectory +
                 File.separator +
-                LocalDateTime.now().toString() +
+                "Screenshot " +
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hhmmss")) +
                 ".png"
     )
-
+    println(file.path)
     save(file)
 }
 

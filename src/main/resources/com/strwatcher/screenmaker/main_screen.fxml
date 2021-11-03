@@ -19,8 +19,8 @@
             maxWidth="-Infinity"
             minHeight="-Infinity"
             minWidth="-Infinity"
-            prefHeight="400.0"
-            prefWidth="600.0"
+            prefHeight="600.0"
+            prefWidth="800.0"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.strwatcher.screenmaker.MainScreenController"
@@ -42,10 +42,10 @@
            <Menu mnemonicParsing="false"
                  text="File"
            >
-               <MenuItem fx:id="miOpen" mnemonicParsing="false" text="Open"/>
-               <MenuItem fx:id="miSave" mnemonicParsing="false" text="Save"/>
-               <MenuItem fx:id="miSaveAs" mnemonicParsing="false" text="Save as"/>
-               <MenuItem fx:id="miClose" mnemonicParsing="false" text="Close"/>
+               <MenuItem fx:id="miOpen" mnemonicParsing="false"   text="Открыть    Ctrl + o"/>
+               <MenuItem fx:id="miSave" mnemonicParsing="false"   text="Сохранить    Ctrl + s"/>
+               <MenuItem fx:id="miSaveAs" mnemonicParsing="false" text="Сохранить как    Ctrl + S"/>
+               <MenuItem fx:id="miClose" mnemonicParsing="false"  text="Закрыть    Ctrl + e"/>
            </Menu>
 
        </MenuBar>

@@ -137,9 +137,25 @@ class MainScreenController {
 
         eraseCheckBox.onAction = drawEraseCheckBoxHandler
 
-        miSave.onAction = EventHandler { canvas.getBufferedSnapshot().fastSave() }
-        miSaveAs.onAction = EventHandler { canvas.getBufferedSnapshot().saveAs(stage!!) }
-        miOpen.onAction = EventHandler { canvas.openImage(stage!!, graphicsContext) }
-        miClose.onAction = EventHandler { canvas.closeImage(graphicsContext) }
+        miSave.onAction = EventHandler { save() }
+        miSaveAs.onAction = EventHandler { saveAs() }
+        miOpen.onAction = EventHandler { open() }
+        miClose.onAction = EventHandler { close() }
+    }
+
+    fun save() {
+        canvas.getBufferedSnapshot().fastSave()
+    }
+
+    fun saveAs() {
+        canvas.getBufferedSnapshot().saveAs(stage!!)
+    }
+
+    fun open() {
+        canvas.openImage(stage!!, graphicsContext)
+    }
+
+    fun close() {
+        canvas.closeImage(graphicsContext)
     }
 }
