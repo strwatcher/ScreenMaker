@@ -53,7 +53,8 @@
    </top>
 
    <left>
-       <ScrollPane fitToWidth="true"
+       <ScrollPane fx:id="toolsScrollPane"
+                   fitToWidth="true"
                    BorderPane.alignment="CENTER"
        >
 

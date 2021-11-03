@@ -35,6 +35,9 @@ class MainScreenController {
     private lateinit var miClose: MenuItem
 
     @FXML
+    private lateinit var toolsScrollPane: ScrollPane
+
+    @FXML
     private lateinit var durationSlider: Slider
 
     @FXML
@@ -100,7 +103,7 @@ class MainScreenController {
     }
 
     @DelicateCoroutinesApi
-    private val takeScreenshot get() = GlobalScope.launch {
+    private val takeScreenshotJob get() = GlobalScope.launch {
         delay(duration)
         Platform.runLater {
             val fullScreenshot = robot.getScreenCapture(null, Screen.getPrimary().bounds)
@@ -113,12 +116,7 @@ class MainScreenController {
         }
     }
 
-    @DelicateCoroutinesApi
-    private val takeScreenshotHandler get() = EventHandler {
-        _: ActionEvent ->
-        if (collapseOptionCheckBox.isSelected) stage?.isIconified = true
-        takeScreenshot.start()
-    }
+
 
 
     var stage: Stage? = null
@@ -126,13 +124,15 @@ class MainScreenController {
 
     @DelicateCoroutinesApi
     fun initialize() {
+        toolsScrollPane.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+
         imageContainer.prefWidthProperty().bind(scrollImageContainer.widthProperty())
         imageContainer.prefHeightProperty().bind(scrollImageContainer.heightProperty())
 
         graphicsContext = canvas.graphicsContext2D
         graphicsContext.fill = colorPicker.value
 
-        screenShotButton.onAction = takeScreenshotHandler
+        screenShotButton.onAction = EventHandler { screenshot() }
 
         canvas.onMouseDragged = drawHandler
         canvas.onMouseClicked = drawHandler
@@ -159,5 +159,11 @@ class MainScreenController {
 
     fun close() {
         canvas.closeImage(graphicsContext)
+    }
+
+    @DelicateCoroutinesApi
+    fun screenshot() {
+        if (collapseOptionCheckBox.isSelected) stage?.isIconified = true
+        takeScreenshotJob.start()
     }
 }

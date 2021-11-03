@@ -6,6 +6,7 @@ import javafx.scene.Scene
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.stage.Stage
+import kotlinx.coroutines.DelicateCoroutinesApi
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -14,6 +15,7 @@ import java.util.*
 import kotlin.io.path.Path
 
 
+@DelicateCoroutinesApi
 class ScreenMakerApplication : Application() {
     private lateinit var fxmlLoader: FXMLLoader
     private lateinit var scene: Scene
@@ -43,6 +45,11 @@ class ScreenMakerApplication : Application() {
         KeyCodeCombination.CONTROL_DOWN
     )
 
+    private val screenshotCombination = KeyCodeCombination(
+        KeyCode.P,
+        KeyCodeCombination.CONTROL_DOWN
+    )
+
     private fun bindShortcuts(stage: Stage) {
         stage.scene.accelerators[saveCombination] = Runnable {
             mainScreenController.save()
@@ -58,6 +65,10 @@ class ScreenMakerApplication : Application() {
 
         stage.scene.accelerators[closeCombination] = Runnable {
             mainScreenController.close()
+        }
+
+        stage.scene.accelerators[screenshotCombination] = Runnable {
+            mainScreenController.screenshot()
         }
     }
 
