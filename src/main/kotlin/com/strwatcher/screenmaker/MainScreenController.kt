@@ -2,6 +2,7 @@ package com.strwatcher.screenmaker
 
 import com.strwatcher.screenmaker.extentions.*
 import javafx.application.Platform
+import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.fxml.FXML
@@ -9,11 +10,13 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.*
 import javafx.scene.image.ImageView
+import javafx.scene.image.WritableImage
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.scene.robot.Robot
 import javafx.scene.shape.ArcType
+import javafx.stage.FileChooser
 import javafx.stage.Screen
 import javafx.stage.Stage
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -21,6 +24,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.imageio.ImageIO
 
 class MainScreenController {
 
@@ -118,13 +122,40 @@ class MainScreenController {
             val screenshotRectangle = ScreenshotAreaSelector().start(fullScreenshot)
             val croppedScreenshot = fullScreenshot.crop(screenshotRectangle)
 
-            canvas.setImage(croppedScreenshot, graphicsContext, imageView, imageContainer)
+            setupImageView(croppedScreenshot)
             stage?.isIconified = false
         }
     }
 
+    private fun setupImageView(image: WritableImage) {
+        closeImage()
+        canvas.width = image.width
+        canvas.height = image.height
+        imageView.image = image
+        imageContainer.maxWidth = image.width
+        imageContainer.maxHeight = image.height
+    }
 
+    private fun openImage() {
+        val fileChooser = FileChooser()
+        val extensionFilters = listOf(
+            FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"),
+            FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg"),
+            FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.jpeg")
+        )
+        fileChooser.extensionFilters.addAll(extensionFilters)
 
+        val file = fileChooser.showOpenDialog(stage)
+        val image =  SwingFXUtils.toFXImage(ImageIO.read(file.inputStream()), null)
+        setupImageView(image)
+    }
+
+    private fun closeImage() {
+        graphicsContext.clearRect(0.0, 0.0, canvas.width, canvas.height)
+        canvas.width = 0.0
+        canvas.height = 0.0
+        imageView.image = null
+    }
 
     var stage: Stage? = null
     var appProperties: Properties? = null
@@ -161,11 +192,11 @@ class MainScreenController {
     }
 
     fun open() {
-        canvas.openImage(stage!!, graphicsContext, imageView, imageContainer)
+        openImage()
     }
 
     fun close() {
-        canvas.closeImage(graphicsContext, imageView)
+        closeImage()
     }
 
     @DelicateCoroutinesApi

@@ -21,7 +21,6 @@ fun BufferedImage.fastSave(appProperties: Properties) {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hhmmss")) +
                 ".png"
     )
-    println(file.path)
     save(file, appProperties)
 }
 
